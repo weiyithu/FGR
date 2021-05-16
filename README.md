@@ -64,6 +64,7 @@ In this stage, psuedo labels with KITTI format will be calculated and stored. Pl
 python detect.py --kitti_dataset_dir ${Path To Your KITTI Dataset} --final_save_dir ${Path To Store Psuedo Labels} --pickle_save_path ${Path To Save Region-Growth Result}
 ```
 
+- For convenience, we simply provide the psuedo labels create by this repo in ./FGR/detection_result.zip, with pusedo training labels and GT validation labels.
 - The multiprocessing.Pool is also used, with default process **16**. Change it by adding extra parameter "--process ${Process Number You Want}" in above command if needed. 
 - Add "--not_merge_valid_labels" to ignore validation labels. We only create psuedo labels in training dataset, for further training in deep models, we simply copy groundtruth validation labels to saved path. If you just want to preserve psuedo labels from training dataset, just add this parameter
 - Add "--save_det_image" if you want to visualize the calculated bbox. By this command, the 'image' directory will be created under "final_save_dir", with visualized png files. 

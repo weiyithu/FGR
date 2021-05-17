@@ -135,7 +135,7 @@ Please remove the symlink of 'training/label_2' temporarily, and add a new symli
 ## Citation 
 If you find our work useful in your research, please consider citing:
 ```
-@inproceedings{wei2020fgr,
+@inproceedings{wei2021fgr,
   title={{FGR: Frustum-Aware Geometric Reasoning for Weakly Supervised 3D Vehicle Detection}},
   author={Wei, Yi and Su, Shang and Lu, Jiwen and Zhou, Jie},
   booktitle={ICRA},

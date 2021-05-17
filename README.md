@@ -77,7 +77,7 @@ python detect.py --kitti_dataset_dir ${Path To Your KITTI Dataset} --final_save_
     - **purple** box indicates initial estimated bounding box
     - **red**    box indicates the intersection based on purple box, which is also the 2D projection of final estimated 3D bbox
 
-<img src="./imgs/sample_bbox.png" width = "400" div align=center />
+<img src="./imgs/sample_bbox.png" width = "300" div align=center />
 
 We also provide final pusedo training labels and GT validation labels in ./FGR/detection_result.zip. You can directly use them to train the model.
 

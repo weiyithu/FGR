@@ -47,43 +47,47 @@ ${Root Path To Your KITTI Dataset}
 ```
 
 ### Retrieving psuedo labels
-#### Stage I: Getting Region-Grow Result
-We set this stage to store middle result, with selected point clouds for each possible cars and other basic information. Please run the following command:
+#### Stage I: Coarse 3D Segmentation
+In this stage, we get coarse 3D segmentation mask for each car. Please run the following command:
 
 ```shell
-python save_region_grow_result.py --kitti_dataset_dir ${Path To Your KITTI Dataset} --output_dir ${Path To Store Region-Growth Result}
+cd FGR
+python save_region_grow_result.py --kitti_dataset_dir ${Path To Your KITTI Dataset} --output_dir ${Path To Save Region-Growth Result}
 ```
 
 - This Python file uses multiprocessing.Pool, which requires the number of parallel processes to execute. Default process is 8, so change this number by adding extra parameter "--process ${Process Number You Want}" in above command if needed. 
 - The space of region-growth result takes about **170M**, and the execution time is about **3** hours when using process=8 (default)
 
-#### Stage II: Iterative alorithm execution and getting psuedo labels with KITTI format
+#### Stage II: 3D Bounding Box Estimation
 In this stage, psuedo labels with KITTI format will be calculated and stored. Please run the following command:
 
 ```shell
-python detect.py --kitti_dataset_dir ${Path To Your KITTI Dataset} --final_save_dir ${Path To Store Psuedo Labels} --pickle_save_path ${Path To Save Region-Growth Result}
+cd FGR
+python detect.py --kitti_dataset_dir ${Path To Your KITTI Dataset} --final_save_dir ${Path To Save Psuedo Labels} --pickle_save_path ${Path To Save Region-Growth Result}
 ```
 
-- For convenience, we simply provide the psuedo labels create by this repo in ./FGR/detection_result.zip, with pusedo training labels and GT validation labels.
-- The multiprocessing.Pool is also used, with default process **16**. Change it by adding extra parameter "--process ${Process Number You Want}" in above command if needed. 
-- Add "--not_merge_valid_labels" to ignore validation labels. We only create psuedo labels in training dataset, for further training in deep models, we simply copy groundtruth validation labels to saved path. If you just want to preserve psuedo labels from training dataset, just add this parameter
-- Add "--save_det_image" if you want to visualize the calculated bbox. By this command, the 'image' directory will be created under "final_save_dir", with visualized png files. 
-- One visualized sample is as follows: 
-    - **white**  points record the point clouds of one car based on region-growth result 
-    - **cyan**   lines record left/right side of frustum
-    - **green**  point records the **key vertex** described in our paper
-    - **yellow** lines record GT bbox's 2D projection
-    - **purple** box records initial bounding box based on point clouds
-    - **red**    box records the intersection based on purple box, which is also psuedo 3D bbox's 2D projection
+- The multiprocessing.Pool is also used, with default process **16**. Change it by adding extra parameter "--process ${Process Number}" in above command if needed. 
+- Add "--not_merge_valid_labels" to ignore validation labels. We only create psuedo labels in training dataset, for further testing deep models, we simply copy groundtruth validation labels to saved path. If you just want to preserve training psuedo, please add this parameter
+- Add "--save_det_image" if you want to visualize the estimated bbox (BEV). The visualization results will be saved in "final_save_dir/image".
+- One visualization sample is drawn in different colors: 
+    - **white**  points indicate the coarse 3D segmentation of the car 
+    - **cyan**   lines indicate left/right side of frustum
+    - **green**  point indicates the **key vertex**
+    - **yellow** lines indicate GT bbox's 2D projection
+    - **purple** box indicates initial estimated bounding box
+    - **red**    box indicates the intersection based on purple box, which is also the 2D projection of final estimated 3D bbox
 
-<img src="./imgs/sample_bbox.png" width = "600" height = "600" div align=center />
+<img src="./imgs/sample_bbox.png" width = "400" div align=center />
 
-### Use psuedo labels to train deep models
+We also provide final pusedo training labels and GT validation labels in ./FGR/detection_result.zip. You can directly use them to train the model.
+
+
+### Use psuedo labels to train 3D detectors
 #### 1. Getting Startted
 
-Please refer to the OpenPCDet repo [here](https://github.com/open-mmlab/OpenPCDet) by Open-mmlab, complete all the required installation
+Please refer to the OpenPCDet repo [here](https://github.com/open-mmlab/OpenPCDet) and complete all the required installation.
 
-After downloading the repo and completing all the installation, a small modification in original code is needed：
+After downloading the repo and completing all the installation, a small modification of original code is needed：
 
 ```text
 --------------------------------------------------
@@ -126,7 +130,7 @@ sh create_kitti_dataset_new_format.sh ${Path To KITTI Dataset} ${Path To OpenPCD
 
 #### 3. Start training
 
-Please follow the OpenPCDet instructions and run PointRCNN models. The reminder is that if you want to train the model by newly created labels instead of groundtruth, please remove the symlink of 'training/label_2' temporarily, and add a new symlink to psuedo label path. If you still need to use GT labels later, please replace the symlink to groundtruth label path.
+Please remove the symlink of 'training/label_2' temporarily, and add a new symlink to psuedo label path. Then follow the OpenPCDet instructions and train PointRCNN models. 
 
 ## Citation 
 If you find our work useful in your research, please consider citing:

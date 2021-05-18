@@ -1,6 +1,6 @@
 FGR
 ===
-This repository contains the python implementation for paper "FGR: Frustum-Aware Geometric Reasoning for Weakly Supervised 3D Vehicle Detection"(ICRA 2021)\[[arXiv](https://arxiv.org/abs/2012.00987)\]
+This repository contains the python implementation for paper "FGR: Frustum-Aware Geometric Reasoning for Weakly Supervised 3D Vehicle Detection"(ICRA 2021)\[[arXiv](https://arxiv.org/abs/2105.07647)\]
 
 <img src="./imgs/FGR.png">
 
